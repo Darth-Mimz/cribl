@@ -65,22 +65,22 @@ service:
   #  - "0.0.0.0/0"
 
   ports:
-  - name: tcpjson
-    port: 10001
-    protocol: TCP
-    #nodePort:
-  - name: s2s
-    port: 9997
-    protocol: TCP
-    #nodePort:
-  - name: http
-    port: 10080
-    protocol: TCP
-    #nodePort:
-  - name: https
-    port: 10081
-    protocol: TCP
-    #nodePort:
+#  - name: tcpjson
+#    port: 10001
+#    protocol: TCP
+#    #nodePort:
+#  - name: s2s
+#    port: 9997
+#    protocol: TCP
+#    #nodePort:
+#  - name: http
+#    port: 10080
+#    protocol: TCP
+#    #nodePort:
+#  - name: https
+#    port: 10081
+#    protocol: TCP
+#    #nodePort:
   - name: syslog
     port: 5140
     protocol: TCP
@@ -89,22 +89,22 @@ service:
     port: 8125
     protocol: TCP
     #nodePort:
-  - name: elastic
-    port: 9200
-    protocol: TCP
-    #nodePort:
-  - name: hec
-    port: 8088
-    protocol: TCP
-    #nodePort:
-  - name: criblhttp
-    port: 10200
-    protocol: TCP
-    #nodePort:
-  - name: cribltcp
-    port: 10300
-    protocol: TCP
-    #nodePort:
+ # - name: elastic
+#    port: 9200
+#    protocol: TCP
+#    #nodePort:
+#  - name: hec
+#    port: 8088
+#    protocol: TCP
+#    #nodePort:
+#  - name: criblhttp
+#    port: 10200
+#    protocol: TCP
+#    #nodePort:
+#  - name: cribltcp
+#    port: 10300
+#    protocol: TCP
+#    #nodePort:
 
 resources: 
   limits:
@@ -117,8 +117,8 @@ resources:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 2  
   targetCPUUtilizationPercentage: 50
   behavior: {}
 #    scaleUp:
@@ -138,28 +138,29 @@ autoscaling:
 # @default -- see `values.yaml`
 ingress:
   # -- Enable creation of ingress resources
-  enable: false
+  enable: true
   # Annotations applied to all ingresses
   annotations: {}
   # `ingressClassName` applied to all ingresses
-  ingressClassName:
+  ingressClassName: nginx
   # Array of ingresses (each entry will become an Ingress resource)
   # You must define your ingress resources!
   ingress: {}
-#    - name: ingress-example
+    - name: cribl-logstream-workergroup-syslog
 #      # TLS secrets for this ingress
-#      tls: {}
+      tls: {}
 #      # Override the ingressClassName for this ingress
-#      ingressClassName:
+#      ingressClassName: nginx
 #      # Annotation overrides (merged with defaults)
-#      annotations: {}
+      annotations: {}
+        cert-manager.io/issuer: "letsencrypt-stage"
 #      # Array of Ingress rules
 #      # https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-#      rules:
-#        - host: ingress.example.com
-#          paths:
-#            - path: /*
-#              port: 8088
+      rules:
+        - host: syslog.defnotavirus.com
+          paths:
+            - path: /*
+              port: 5140
 #        - host: ingress2.example.com
 #          paths:
 #            - path: /exact/path/matching
