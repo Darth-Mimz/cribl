@@ -116,7 +116,7 @@ ingress:
           hosts:
             - syslog.defnotavirus.com
       rules:
-        - host: esyslog.defnotavirus.com
+        - host: syslog.defnotavirus.com
           paths:
             - path: /*
               port: 5140
