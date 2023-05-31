@@ -108,9 +108,9 @@ ingress:
   enable: true
   ingress:
     - name: syslog-cribl-worker-ingress
-    annotations: 
-      kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-stage
+      annotations: 
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-stage
       tls:
         - secretName: syslog-cribl-worker-ingress-tls
           hosts:
