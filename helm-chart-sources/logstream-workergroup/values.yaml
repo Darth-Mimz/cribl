@@ -119,5 +119,9 @@ ingress:
         - host: syslog.defnotavirus.com
           paths:
             - path: /*
-              port:
-                number: 5140
+              pathType: Prefix
+              backend:
+                service:  
+                  name: 
+                  port:
+                    number: 5140
