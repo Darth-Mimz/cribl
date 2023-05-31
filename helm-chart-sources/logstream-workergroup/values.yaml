@@ -31,7 +31,7 @@ nameOverride: ""
 config: 
   host: logstream-leader-internal
   group: kubernetes
-  token: criblleader
+  token: ABCDEF01-1234-5678-ABCD-ABCDEF012345
   rejectSelfSignedCerts: 0
   probes: true
   livenessProbe:
@@ -156,7 +156,7 @@ ingress:
         cert-manager.io/issuer: "letsencrypt-stage"
 #      # Array of Ingress rules
 #      # https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-      rules:
+      rules: {}
         - host: syslog.defnotavirus.com
           paths:
             - path: /*
