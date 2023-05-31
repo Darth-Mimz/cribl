@@ -106,11 +106,11 @@ autoscaling:
 
 ingress:
   enable: true
-  annotations: 
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
   ingress:
     - name: syslog-cribl-worker-ingress
+    annotations: 
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-stage
       tls:
         - secretName: syslog-cribl-worker-ingress-tls
           hosts:
