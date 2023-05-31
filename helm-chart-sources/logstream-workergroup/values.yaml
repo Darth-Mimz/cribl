@@ -56,55 +56,39 @@ deployment: deployment
 
 podAnnotations: {}
 
-
 service:
   type: LoadBalancer
-  annotations: {}
-  # externalTrafficPolicy: Local
-  # loadBalancerSourceRanges:
-  #  - "0.0.0.0/0"
-
   ports:
-#  - name: tcpjson
-#    port: 10001
-#    protocol: TCP
-#    #nodePort:
-#  - name: s2s
-#    port: 9997
-#    protocol: TCP
-#    #nodePort:
-#  - name: http
-#    port: 10080
-#    protocol: TCP
-#    #nodePort:
-#  - name: https
-#    port: 10081
-#    protocol: TCP
-#    #nodePort:
+  - name: tcpjson
+    port: 10001
+    protocol: TCP
+  - name: s2s
+    port: 9997
+    protocol: TCP
+  - name: http
+    port: 10080
+    protocol: TCP
+  - name: https
+    port: 10081
+    protocol: TCP
   - name: syslog
     port: 5140
     protocol: TCP
-    #nodePort:
   - name: metrics
     port: 8125
     protocol: TCP
-    #nodePort:
- # - name: elastic
-#    port: 9200
-#    protocol: TCP
-#    #nodePort:
-#  - name: hec
-#    port: 8088
-#    protocol: TCP
-#    #nodePort:
-#  - name: criblhttp
-#    port: 10200
-#    protocol: TCP
-#    #nodePort:
-#  - name: cribltcp
-#    port: 10300
-#    protocol: TCP
-#    #nodePort:
+  - name: elastic
+    port: 9200
+    protocol: TCP
+  - name: hec
+    port: 8088
+    protocol: TCP
+  - name: criblhttp
+    port: 10200
+    protocol: TCP
+  - name: cribltcp
+    port: 10300
+    protocol: TCP
 
 resources: 
   limits:
@@ -114,63 +98,25 @@ resources:
     cpu: 1250m
     memory: 256Mi
 
-
 autoscaling:
   enabled: true
-  minReplicas: 1
-  maxReplicas: 2  
+  minReplicas: 2
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 50
-  behavior: {}
-#    scaleUp:
-#     stabilizationWindowSeconds: 300
-#     policies:
-#     - type: Pods
-#       value: 1
-#       periodSeconds: 60
-#    scaleDown:
-#     stabilizationWindowSeconds: 300
-#     policies:
-#     - type: Pods
-#       value: 1
-#       periodSeconds: 180
 
-# -- K8s ingress resources
-# @default -- see `values.yaml`
 ingress:
-  # -- Enable creation of ingress resources
   enable: true
-  # Annotations applied to all ingresses
-  annotations: {}
-  # `ingressClassName` applied to all ingresses
-  ingressClassName: nginx
-  # Array of ingresses (each entry will become an Ingress resource)
-  # You must define your ingress resources!
-  ingress: {}
-    - name: cribl-logstream-workergroup-syslog
-#      # TLS secrets for this ingress
-      tls: {}
-#      # Override the ingressClassName for this ingress
-#      ingressClassName: nginx
-#      # Annotation overrides (merged with defaults)
-      annotations: {}
-        cert-manager.io/issuer: "letsencrypt-stage"
-#      # Array of Ingress rules
-#      # https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-      rules: {}
-        - host: syslog.defnotavirus.com
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  ingress:
+    - name: syslog-cribl-worker-ingress
+      tls:
+        - secretName: syslog-cribl-worker-ingress-tls
+          hosts:
+            - syslog.defnotavirus.com
+      rules:
+        - host: esyslog.defnotavirus.com
           paths:
             - path: /*
               port: 5140
-#        - host: ingress2.example.com
-#          paths:
-#            - path: /exact/path/matching
-#              # Other path kinds can be specified (default is Prefix)
-#              # https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
-#              kind: Exact
-#              port: 8080
-#            - path: /*
-#              port: 8082
-#        # Example default rule without host name
-#        - paths:
-#            - path: /*
-#              port: 8088
